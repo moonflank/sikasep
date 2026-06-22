@@ -1,0 +1,17 @@
+{
+  "name": "SI-KASEP (Sistem Informasi - Kenali, Amati, Skrining, Edukasi, Pengobatan)",
+  "short_name": "SI-KASEP",
+  "description": "Sistem Informasi - Kenali, Amati, Skrining, Edukasi, Pengobatan.",
+  "start_url": "/#/splash",
+  "display": "standalone",
+  "background_color": "#F5F7FA",
+  "theme_color": "#073B6F",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

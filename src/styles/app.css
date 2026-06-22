@@ -1,0 +1,267 @@
+:root {
+  --navy: #14324A;
+  --navy-dark: #0C2235;
+  --blue: #276182;
+  --blue-light: #E2F0F2;
+  --green: #4F7A2D;
+  --green-light: #EDF6E5;
+  --orange: #C78324;
+  --orange-light: #FFF3D9;
+  --danger: #D93025;
+  --danger-light: #FDECEC;
+  --warning: #D69A24;
+  --surface: #FFFFFF;
+  --background: #F7F0E4;
+  --text: #20251F;
+  --text-muted: #6E6A5F;
+  --border: #E2D4BD;
+  --shadow: 0 14px 34px rgba(69, 46, 20, 0.13);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+}
+
+body {
+  min-height: 100%;
+  margin: 0;
+  color: var(--text);
+  background: var(--background);
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+a {
+  color: var(--blue);
+}
+
+:focus-visible {
+  outline: 3px solid rgba(25, 118, 201, 0.36);
+  outline-offset: 3px;
+}
+
+.app-page {
+  min-height: 100dvh;
+  padding: 0;
+}
+
+.mobile-shell {
+  position: relative;
+  min-height: 100dvh;
+  max-width: 480px;
+  margin: 0 auto;
+  background: var(--background);
+  box-shadow: 0 0 0 1px rgba(69, 46, 20, 0.08);
+  padding-bottom: 96px;
+}
+
+.mobile-content {
+  padding: 16px;
+}
+
+.mobile-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  color: #fff;
+  background: var(--navy);
+  box-shadow: 0 6px 18px rgba(12, 34, 53, 0.24);
+}
+
+.mobile-header h1 {
+  margin: 0;
+  font-size: 1.08rem;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.mobile-header p {
+  margin: 2px 0 0;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.85rem;
+}
+
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  border: 0;
+  border-radius: 8px;
+  color: inherit;
+  background: rgba(255, 255, 255, 0.13);
+}
+
+.soft-card,
+.tile,
+.question-card,
+.summary-card,
+.result-panel {
+  border: 1px solid rgba(226, 212, 189, 0.9);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.soft-card {
+  padding: 16px;
+}
+
+.section-title {
+  margin: 0 0 12px;
+  color: var(--navy);
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.muted {
+  color: var(--text-muted);
+}
+
+.min-w-0 {
+  min-width: 0;
+}
+
+.btn {
+  border-radius: 8px;
+  min-height: 44px;
+  font-weight: 700;
+}
+
+.btn-primary {
+  --bs-btn-bg: var(--blue);
+  --bs-btn-border-color: var(--blue);
+  --bs-btn-hover-bg: #1E4D67;
+  --bs-btn-hover-border-color: #1E4D67;
+}
+
+.btn-outline-primary {
+  --bs-btn-color: var(--blue);
+  --bs-btn-border-color: var(--blue);
+  --bs-btn-hover-bg: var(--blue);
+  --bs-btn-hover-border-color: var(--blue);
+}
+
+.form-control,
+.form-select {
+  min-height: 48px;
+  border-color: var(--border);
+  border-radius: 8px;
+}
+
+.form-label {
+  font-weight: 700;
+}
+
+.required {
+  color: var(--danger);
+}
+
+.connection-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: normal;
+  text-align: left;
+}
+
+.screening-progress {
+  padding: 16px;
+  color: var(--navy);
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+}
+
+.screening-progress span {
+  color: var(--text-muted);
+  font-weight: 700;
+}
+
+.progress {
+  height: 12px;
+  border-radius: 999px;
+  background: var(--blue-light);
+}
+
+.progress-bar {
+  background: var(--blue);
+  border-radius: 999px;
+}
+
+.alert-medical {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  border: 1px solid var(--blue-light);
+  color: var(--navy);
+  background: #EFF8F7;
+  border-radius: 8px;
+  font-weight: 700;
+}
+
+.pattern-strip {
+  min-height: 56px;
+  border-radius: 8px;
+  background-image: url('/images/pattern-baduy.svg');
+  background-size: cover;
+  background-position: center;
+}
+
+.status-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--green);
+}
+
+.empty-state {
+  padding: 28px 16px;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.modal-content {
+  border: 0;
+  border-radius: 8px;
+}
+
+.modal-header {
+  color: #fff;
+  background: var(--navy);
+}
+
+.toast {
+  border-radius: 8px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
