@@ -211,7 +211,6 @@ export function emptyDraft() {
       diabetes: '',
       kidneyDisease: '',
       hiv: '',
-      corticosteroid: '',
     },
     symptoms: {},
     treatment: {

@@ -1,11 +1,13 @@
 import { resultCopy } from '../data/screening-rules.js';
 import { clearDraft, getCurrentUser, getLastResult } from '../modules/storage.js';
 import {
+  analysisSpeechText,
   appHeader,
   escapeHtml,
   mobileShell,
   resultBadge,
   safeDisclaimer,
+  speakerButton,
 } from '../modules/screening.js';
 
 function normalizeLevel(level = 'low') {
@@ -47,6 +49,15 @@ export function screeningResultView() {
     monitor: 'result-warning',
     followUp: 'result-danger',
   }[level];
+  const resultSpeechText = analysisSpeechText(
+    {
+      respondentCategory: risk.respondentCategory,
+      status: risk.status || copy.label,
+      reasonSummary: risk.reasonSummary || copy.text,
+      recommendation: risk.recommendation || copy.recommendation,
+    },
+    `Hasil skrining ${copy.label}`,
+  );
 
   const actionButtons =
     level === 'negative' || level === 'low'
@@ -96,9 +107,12 @@ export function screeningResultView() {
           <span class="result-icon">
             <i class="bi ${copy.icon}" aria-hidden="true"></i>
           </span>
-          <div>
+          <div class="min-w-0 flex-grow-1">
             <div class="mb-2">${resultBadge(level === 'followUp' ? 'follow-up' : level)}</div>
-            <h2 class="h4 fw-bold mb-2">${copy.label}</h2>
+            <div class="result-title-row">
+              <h2 class="h4 fw-bold mb-0">${copy.label}</h2>
+              ${speakerButton(resultSpeechText, { ariaLabel: 'Dengarkan hasil skrining' })}
+            </div>
             ${
               risk.respondentCategory || risk.status
                 ? `
@@ -134,7 +148,7 @@ export function screeningResultView() {
       <section class="soft-card mt-3">
         <h3 class="section-title">Riwayat Pengobatan</h3>
         <ul class="summary-list">
-          <li><span>Pernah minum obat TBC &gt; 1 bulan</span><strong>${yesNoLabel(previousTbTreatment)}</strong></li>
+          <li><span>Pernah pengobatan TBC</span><strong>${yesNoLabel(previousTbTreatment)}</strong></li>
           <li><span>Status pengobatan sebelumnya</span><strong>${escapeHtml(treatmentStatusLabel(draft))}</strong></li>
         </ul>
       </section>

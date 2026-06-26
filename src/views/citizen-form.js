@@ -7,7 +7,23 @@ import {
   saveDraft,
   updateDraftSection,
 } from '../modules/storage.js';
-import { appHeader, escapeHtml, formDataObject, mobileShell, progressBar } from '../modules/screening.js';
+import {
+  appHeader,
+  escapeHtml,
+  formDataObject,
+  mobileShell,
+  progressBar,
+  speakerButton,
+} from '../modules/screening.js';
+
+function fieldLabel(fieldId, label, required = false) {
+  return `
+    <div class="form-label-row">
+      <label class="form-label" for="${fieldId}">${label}${required ? ' <span class="required">*</span>' : ''}</label>
+      ${speakerButton(label, { ariaLabel: `Dengarkan isian ${label}` })}
+    </div>
+  `;
+}
 
 export function citizenFormView() {
   const currentUser = getCurrentUser();
@@ -53,29 +69,34 @@ export function citizenFormView() {
     <div class="mobile-content screening-content">
       <form id="citizenForm" class="needs-validation" novalidate>
         <div class="soft-card paper-form mb-3">
-          <h2 class="paper-section-title">Identitas Pasien / Responden</h2>
+          <div class="section-heading-action">
+            <h2 class="paper-section-title mb-0">Identitas Pasien / Responden</h2>
+            ${speakerButton('Identitas Pasien atau responden. Isi data warga yang akan diskrining.', {
+              ariaLabel: 'Dengarkan bagian identitas pasien atau responden',
+            })}
+          </div>
           <div class="mb-3">
-            <label class="form-label" for="name">Nama <span class="required">*</span></label>
+            ${fieldLabel('name', 'Nama', true)}
             <input class="form-control" id="name" name="name" value="${escapeHtml(fixedProfile.name)}" placeholder="Nama lengkap atau inisial" ${isSelfScreening ? 'readonly' : ''} required />
             <div class="invalid-feedback">Nama wajib diisi.</div>
           </div>
           <div class="row g-3">
             <div class="col-6">
-              <label class="form-label" for="age">Umur <span class="required">*</span></label>
+              ${fieldLabel('age', 'Umur', true)}
               <input class="form-control" id="age" name="age" type="number" min="0" max="120" value="${escapeHtml(fixedProfile.age)}" placeholder="Tahun" ${isSelfScreening ? 'readonly' : ''} required />
               <div class="invalid-feedback">Umur wajib diisi.</div>
             </div>
             <div class="col-6">
-              <label class="form-label" for="birthDate">Tanggal lahir</label>
+              ${fieldLabel('birthDate', 'Tanggal lahir')}
               <input class="form-control" id="birthDate" name="birthDate" type="date" value="${escapeHtml(citizen.birthDate || '')}" />
             </div>
           </div>
           <div class="mt-3">
-            <label class="form-label" for="nik">NIK</label>
+            ${fieldLabel('nik', 'NIK')}
             <input class="form-control" id="nik" name="nik" inputmode="numeric" maxlength="16" value="${escapeHtml(fixedProfile.nik || '')}" placeholder="16 digit bila tersedia" ${isSelfScreening ? 'readonly' : ''} />
           </div>
           <div class="mt-3">
-            <label class="form-label" for="gender">Jenis kelamin <span class="required">*</span></label>
+            ${fieldLabel('gender', 'Jenis kelamin', true)}
             ${
               isSelfScreening
                 ? `<input class="form-control" id="gender" name="gender" value="${escapeHtml(fixedProfile.gender)}" readonly required />`
@@ -88,19 +109,19 @@ export function citizenFormView() {
             <div class="invalid-feedback">Jenis kelamin wajib dipilih.</div>
           </div>
           <div class="mt-3">
-            <label class="form-label" for="address">Alamat <span class="required">*</span></label>
+            ${fieldLabel('address', 'Alamat', true)}
             <textarea class="form-control" id="address" name="address" rows="3" placeholder="Kampung, RT/RW, desa/kecamatan" ${isSelfScreening ? 'readonly' : ''} required>${escapeHtml(fixedProfile.address)}</textarea>
             <div class="invalid-feedback">Alamat wajib diisi.</div>
           </div>
           <div class="row g-3 mt-1">
             <div class="col-12">
-              <label class="form-label" for="screeningDate">Tanggal pemeriksaan <span class="required">*</span></label>
+              ${fieldLabel('screeningDate', 'Tanggal pemeriksaan', true)}
               <input class="form-control" id="screeningDate" name="screeningDate" type="date" value="${escapeHtml(citizen.screeningDate)}" required />
               <div class="invalid-feedback">Tanggal pemeriksaan wajib diisi.</div>
             </div>
           </div>
           <div class="mt-3">
-            <label class="form-label" for="cadreName">Nama petugas skrining <span class="required">*</span></label>
+            ${fieldLabel('cadreName', 'Nama petugas skrining', true)}
             ${
               isSelfScreening
                 ? `<input class="form-control" id="cadreName" name="cadreName" value="${escapeHtml(fixedProfile.cadreName)}" readonly required />`

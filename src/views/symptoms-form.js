@@ -1,19 +1,25 @@
 import { calculateRisk, visibleSymptomQuestions } from '../data/screening-rules.js';
 import { getDraft, updateDraftSection } from '../modules/storage.js';
 import {
+  analysisSpeechText,
   appHeader,
   bindYesNoGroups,
   escapeHtml,
   mobileShell,
   progressBar,
+  speakerButton,
   yesNoGroup,
 } from '../modules/screening.js';
 
 function screeningPreviewMarkup(result) {
   const isPositive = result.level === 'positive';
+  const speechText = analysisSpeechText(result, 'Hasil skrining otomatis');
   return `
     <section class="screening-preview screening-preview--${isPositive ? 'positive' : 'negative'}" id="screeningPreview" aria-live="polite">
-      <span>Hasil skrining otomatis</span>
+      <div class="screening-preview-header">
+        <span>Hasil skrining otomatis</span>
+        ${speakerButton(speechText, { ariaLabel: 'Dengarkan hasil skrining otomatis' })}
+      </div>
       <div class="summary-list">
         <div><span>Kategori responden</span><strong>${escapeHtml(result.respondentCategory)}</strong></div>
         <div><span>Status skrining</span><strong>${escapeHtml(result.status)}</strong></div>

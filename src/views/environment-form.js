@@ -5,19 +5,25 @@ import {
 } from '../data/screening-rules.js';
 import { getDraft, updateDraftSection } from '../modules/storage.js';
 import {
+  analysisSpeechText,
   appHeader,
   bindYesNoGroups,
   escapeHtml,
   mobileShell,
   progressBar,
+  speakerButton,
   yesNoGroup,
 } from '../modules/screening.js';
 
 function screeningPreviewMarkup(result) {
   const isPositive = result.level === 'positive';
+  const speechText = analysisSpeechText(result, 'Hasil skrining sementara');
   return `
     <section class="screening-preview screening-preview--${isPositive ? 'positive' : 'negative'}" id="treatmentPreview" aria-live="polite">
-      <span>Hasil skrining sementara</span>
+      <div class="screening-preview-header">
+        <span>Hasil skrining sementara</span>
+        ${speakerButton(speechText, { ariaLabel: 'Dengarkan hasil skrining sementara' })}
+      </div>
       <div class="summary-list">
         <div><span>Kategori responden</span><strong>${escapeHtml(result.respondentCategory)}</strong></div>
         <div><span>Status skrining</span><strong>${escapeHtml(result.status)}</strong></div>
@@ -33,6 +39,11 @@ function treatmentCompletionGroup(value = '', hidden = true) {
     <fieldset class="question-card ${hidden ? 'd-none' : ''}" id="treatmentCompletionWrap">
       <legend>
         <span>2. ${treatmentCompletionQuestion.label}</span>
+        <div class="question-actions">
+          ${speakerButton(`2. ${treatmentCompletionQuestion.label}`, {
+            ariaLabel: `Dengarkan pertanyaan 2. ${treatmentCompletionQuestion.label}`,
+          })}
+        </div>
       </legend>
       <div class="yes-no-group" data-field="${treatmentCompletionQuestion.id}">
         <button class="choice-btn ${value === 'yes' ? 'active-yes' : ''}" type="button" data-value="yes">

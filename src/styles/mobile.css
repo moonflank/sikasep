@@ -581,6 +581,26 @@
   padding: 4px 6px;
 }
 
+.paper-question-cell {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.form-label-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.form-label-row .form-label {
+  min-width: 0;
+  margin-bottom: 0;
+}
+
 .screening-preview {
   margin: 14px 0;
   padding: 14px;
@@ -588,6 +608,27 @@
   border-radius: 8px;
   background: #fffaf1;
   box-shadow: var(--shadow);
+}
+
+.screening-preview-header,
+.section-heading-action,
+.result-title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.result-title-row {
+  align-items: center;
+}
+
+.screening-preview-header > span {
+  display: block;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-weight: 850;
 }
 
 .screening-preview > span {
@@ -636,6 +677,18 @@
   font-weight: 800;
 }
 
+.question-card legend > span {
+  min-width: 0;
+  flex: 1;
+}
+
+.question-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
 .help-dot {
   display: inline-flex;
   align-items: center;
@@ -647,6 +700,42 @@
   border-radius: 8px;
   color: var(--blue);
   background: var(--blue-light);
+}
+
+.speaker-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 8px;
+  color: var(--blue);
+  background: var(--blue-light);
+  font-size: 0.8rem;
+  font-weight: 850;
+  white-space: nowrap;
+}
+
+.speaker-button i {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.speaker-button span:empty {
+  display: none;
+}
+
+.speaker-button--compact {
+  width: 34px;
+  flex: 0 0 34px;
+  padding: 0;
+}
+
+.speaker-button.is-speaking {
+  color: #fff;
+  background: var(--blue);
 }
 
 .yes-no-group {
@@ -745,6 +834,18 @@
   color: var(--text-muted);
   font-size: 0.82rem;
   font-weight: 800;
+}
+
+.nutrition-panel-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.nutrition-panel-header .nutrition-label {
+  margin-bottom: 0;
 }
 
 .nutrition-panel strong {

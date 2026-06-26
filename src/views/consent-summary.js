@@ -11,7 +11,14 @@ import {
   setLastResult,
 } from '../modules/storage.js';
 import { calculateRisk } from '../data/screening-rules.js';
-import { appHeader, escapeHtml, mobileShell, progressBar } from '../modules/screening.js';
+import {
+  analysisSpeechText,
+  appHeader,
+  escapeHtml,
+  mobileShell,
+  progressBar,
+  speakerButton,
+} from '../modules/screening.js';
 
 function selectedFactors(questions, answers = {}) {
   return questions.filter((question) => answers[question.id] === 'yes').map((question) => question.factor);
@@ -56,6 +63,7 @@ export function consentSummaryView() {
   const previousTbTreatment = treatment.previousTbTreatment || draft.symptoms?.previousTbTreatment || '';
   const hasTreatment = previousTbTreatment === 'yes';
   const risk = calculateRisk(draft);
+  const riskSpeechText = analysisSpeechText(risk, 'Hasil skrining otomatis');
 
   const content = `
     ${appHeader('Ringkasan Skrining', 'Periksa sebelum disimpan', { back: '/skrining/riwayat-pengobatan' })}
@@ -79,7 +87,10 @@ export function consentSummaryView() {
       </section>
 
       <section class="summary-card ${risk.level === 'positive' ? 'result-danger' : 'result-success'}">
-        <h2 class="section-title">Hasil Skrining Otomatis</h2>
+        <div class="section-heading-action">
+          <h2 class="section-title mb-0">Hasil Skrining Otomatis</h2>
+          ${speakerButton(riskSpeechText, { ariaLabel: 'Dengarkan hasil skrining otomatis' })}
+        </div>
         <ul class="summary-list">
           <li><span>Kategori responden</span><strong>${escapeHtml(risk.respondentCategory)}</strong></li>
           <li><span>Status skrining</span><strong>${escapeHtml(risk.status)}</strong></li>
@@ -110,7 +121,7 @@ export function consentSummaryView() {
         </div>
         <ul class="summary-list">
           <li>
-            <span>Pernah minum obat TBC &gt; 1 bulan</span>
+            <span>Pernah pengobatan TBC</span>
             <strong>${yesNoLabel(previousTbTreatment)}</strong>
           </li>
           <li>

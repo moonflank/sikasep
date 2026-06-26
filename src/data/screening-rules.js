@@ -14,25 +14,20 @@ export const riskFactorQuestions = [
     label: 'HIV/AIDS',
     factor: 'HIV/AIDS',
   },
-  {
-    id: 'corticosteroid',
-    label: 'Sedang konsumsi kortikosteroid dalam waktu lama',
-    factor: 'Konsumsi kortikosteroid jangka panjang',
-  },
 ];
 
 export const physicalQuestions = riskFactorQuestions;
 
 export const symptomQuestions = [
   {
-    id: 'anyCough',
-    label: 'Batuk dalam bentuk apa pun',
-    factor: 'Batuk',
+    id: 'coughTwoWeeks',
+    label: 'Batuk lebih dari 2 minggu',
+    factor: 'Batuk lebih dari 2 minggu',
   },
   {
-    id: 'coughTwoWeeks',
-    label: 'Batuk berdahak lebih dari 2 minggu',
-    factor: 'Batuk berdahak lebih dari 2 minggu',
+    id: 'anyCough',
+    label: 'Batuk berdahak',
+    factor: 'Batuk berdahak',
   },
   {
     id: 'bloodCough',
@@ -80,14 +75,14 @@ export const symptomQuestions = [
 export const treatmentQuestions = [
   {
     id: 'previousTbTreatment',
-    label: 'Pernah minum obat TBC sebelumnya lebih dari 1 bulan',
+    label: 'Pernah pengobatan TBC',
     factor: 'Riwayat minum obat TBC lebih dari 1 bulan',
   },
 ];
 
 export const treatmentCompletionQuestion = {
   id: 'treatmentCompleted',
-  label: 'Apakah pengobatan TBC sebelumnya tuntas?',
+  label: 'Pengobatan TBC tuntas',
   completedFactor: 'Riwayat pengobatan TBC sebelumnya tuntas',
   incompleteFactor: 'Riwayat pengobatan TBC sebelumnya tidak tuntas',
 };

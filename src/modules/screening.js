@@ -134,18 +134,104 @@ export function safeDisclaimer() {
   `;
 }
 
+function normalizeSpeechText(text = '') {
+  return String(text).replace(/\s+/g, ' ').trim();
+}
+
+let activeSpeechButton = null;
+
+function clearSpeechButtonState() {
+  activeSpeechButton?.classList.remove('is-speaking');
+  activeSpeechButton = null;
+}
+
+function speakText(text, button, showToast) {
+  const spokenText = normalizeSpeechText(text);
+  if (!spokenText) return;
+
+  if (!('speechSynthesis' in window) || !window.SpeechSynthesisUtterance) {
+    showToast?.('Fitur suara belum didukung di browser ini.', 'warning');
+    return;
+  }
+
+  window.speechSynthesis.cancel();
+  clearSpeechButtonState();
+
+  const utterance = new SpeechSynthesisUtterance(spokenText);
+  utterance.lang = 'id-ID';
+  utterance.rate = 0.95;
+
+  activeSpeechButton = button;
+  button.classList.add('is-speaking');
+  utterance.onend = clearSpeechButtonState;
+  utterance.onerror = () => {
+    clearSpeechButtonState();
+    showToast?.('Suara belum dapat diputar di perangkat ini.', 'warning');
+  };
+
+  window.speechSynthesis.speak(utterance);
+}
+
+export function speakerButton(text, options = {}) {
+  const spokenText = normalizeSpeechText(text);
+  if (!spokenText) return '';
+
+  const label = options.label ?? 'Suara';
+  const title = options.title || 'Dengarkan teks';
+  const ariaLabel = options.ariaLabel || `Dengarkan ${spokenText}`;
+  const className = options.className ? ` ${options.className}` : '';
+
+  return `
+    <button class="speaker-button${className}" type="button" data-speak="${escapeHtml(spokenText)}" title="${escapeHtml(title)}" aria-label="${escapeHtml(ariaLabel)}">
+      <i class="bi bi-volume-up-fill" aria-hidden="true"></i>
+      <span>${escapeHtml(label)}</span>
+    </button>
+  `;
+}
+
+export function analysisSpeechText(result = {}, title = 'Hasil skrining') {
+  return normalizeSpeechText(
+    [
+      title,
+      result.respondentCategory ? `Kategori responden ${result.respondentCategory}` : '',
+      result.status ? `Status skrining ${result.status}` : '',
+      result.reasonSummary || '',
+      result.recommendation || '',
+    ]
+      .filter(Boolean)
+      .join('. '),
+  );
+}
+
+export function setupSpeakerButtons(root, showToast) {
+  if (root.dataset.speakerButtonsReady === 'true') return;
+  root.dataset.speakerButtonsReady = 'true';
+
+  root.addEventListener('click', (event) => {
+    const button = event.target.closest('[data-speak]');
+    if (!button || !root.contains(button)) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    speakText(button.dataset.speak, button, showToast);
+  });
+}
+
 export function yesNoGroup(question, value = '') {
+  const helpButton = question.help
+    ? `<button class="help-dot" type="button" data-bs-toggle="tooltip" data-bs-title="${escapeHtml(question.help)}" aria-label="Bantuan">
+        <i class="bi bi-question-circle"></i>
+      </button>`
+    : '';
+
   return `
     <fieldset class="question-card">
       <legend>
         <span>${question.label}</span>
-        ${
-          question.help
-            ? `<button class="help-dot" type="button" data-bs-toggle="tooltip" data-bs-title="${escapeHtml(question.help)}" aria-label="Bantuan">
-                <i class="bi bi-question-circle"></i>
-              </button>`
-            : ''
-        }
+        <div class="question-actions">
+          ${speakerButton(question.label, { ariaLabel: `Dengarkan pertanyaan ${question.label}` })}
+          ${helpButton}
+        </div>
       </legend>
       <div class="yes-no-group" data-field="${question.id}">
         <button class="choice-btn ${value === 'yes' ? 'active-yes' : ''}" type="button" data-value="yes">
@@ -183,7 +269,16 @@ export function yesNoTable(questions = [], answers = {}, options = {}) {
                 (question, index) => `
                   <tr>
                     <td>${index + 1}</td>
-                    <td>${question.label}</td>
+                    <td>
+                      <div class="paper-question-cell">
+                        <span>${question.label}</span>
+                        ${speakerButton(question.label, {
+                          className: 'speaker-button--compact',
+                          label: '',
+                          ariaLabel: `Dengarkan pertanyaan ${question.label}`,
+                        })}
+                      </div>
+                    </td>
                     <td>
                       <div class="yes-no-group paper-choice" data-field="${question.id}">
                         <button class="choice-btn ${answers[question.id] === 'yes' ? 'active-yes' : ''}" type="button" data-value="yes" aria-label="${question.label} Ya">

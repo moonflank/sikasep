@@ -7,6 +7,7 @@ import {
   formDataObject,
   mobileShell,
   progressBar,
+  speakerButton,
   yesNoGroup,
 } from '../modules/screening.js';
 
@@ -44,12 +45,28 @@ function calculateNutritionStatus({ age, weight, height }) {
   };
 }
 
+function fieldLabel(fieldId, label, required = false) {
+  return `
+    <div class="form-label-row">
+      <label class="form-label" for="${fieldId}">${label}${required ? ' <span class="required">*</span>' : ''}</label>
+      ${speakerButton(label, { ariaLabel: `Dengarkan isian ${label}` })}
+    </div>
+  `;
+}
+
 function nutritionStatusMarkup(nutrition, age) {
   if (!nutrition) {
     const hasAge = numberValue(age) > 0;
+    const title = 'Status gizi otomatis';
+    const message = hasAge
+      ? 'Lengkapi berat dan tinggi badan. Masukkan berat badan dan tinggi badan untuk menghitung IMT.'
+      : 'Usia belum tersedia. Kembali ke Langkah 1 untuk mengisi usia warga.';
     return `
       <div class="nutrition-panel nutrition-panel--empty" id="nutritionPanel" aria-live="polite">
-        <span class="nutrition-label">Status gizi otomatis</span>
+        <div class="nutrition-panel-header">
+          <span class="nutrition-label">${title}</span>
+          ${speakerButton(`${title}. ${message}`, { ariaLabel: 'Dengarkan status gizi otomatis' })}
+        </div>
         <strong>${hasAge ? 'Lengkapi berat dan tinggi badan' : 'Usia belum tersedia'}</strong>
         <p>${hasAge ? 'Masukkan berat badan dan tinggi badan untuk menghitung IMT.' : 'Kembali ke Langkah 1 untuk mengisi usia warga.'}</p>
       </div>
@@ -58,7 +75,13 @@ function nutritionStatusMarkup(nutrition, age) {
 
   return `
     <div class="nutrition-panel nutrition-panel--${nutrition.tone}" id="nutritionPanel" aria-live="polite">
-      <span class="nutrition-label">Status gizi otomatis</span>
+      <div class="nutrition-panel-header">
+        <span class="nutrition-label">Status gizi otomatis</span>
+        ${speakerButton(
+          `Status gizi otomatis. ${nutrition.status}. Usia ${nutrition.age} tahun. IMT ${nutrition.bmi}.`,
+          { ariaLabel: 'Dengarkan status gizi otomatis' },
+        )}
+      </div>
       <strong>${escapeHtml(nutrition.status)}</strong>
       <dl>
         <div><dt>Usia</dt><dd>${escapeHtml(nutrition.age)} tahun</dd></div>
@@ -71,10 +94,7 @@ function nutritionStatusMarkup(nutrition, age) {
 export function physicalFormView() {
   const draft = getDraft();
   const physical = draft.physical || {};
-  const physicalAnswers = {
-    ...physical,
-    corticosteroid: physical.corticosteroid || physical.medication || '',
-  };
+  const physicalAnswers = { ...physical };
   const citizen = draft.citizen || {};
   const nutrition = calculateNutritionStatus({
     age: citizen.age,
@@ -88,15 +108,20 @@ export function physicalFormView() {
     <div class="mobile-content screening-content">
       <form id="physicalForm" novalidate>
         <div class="soft-card mb-3">
-          <h2 class="paper-section-title">Pengukuran Fisik</h2>
+          <div class="section-heading-action">
+            <h2 class="paper-section-title mb-0">Pengukuran Fisik</h2>
+            ${speakerButton('Pengukuran fisik. Isi berat badan dan tinggi badan responden.', {
+              ariaLabel: 'Dengarkan bagian pengukuran fisik',
+            })}
+          </div>
           <div class="row g-3">
             <div class="col-6">
-              <label class="form-label" for="weight">Berat badan <span class="required">*</span></label>
+              ${fieldLabel('weight', 'Berat badan', true)}
               <input class="form-control" id="weight" name="weight" type="number" min="1" step="0.1" inputmode="decimal" value="${physical.weight || ''}" placeholder="kg" required />
               <div class="invalid-feedback">Berat badan wajib diisi.</div>
             </div>
             <div class="col-6">
-              <label class="form-label" for="height">Tinggi badan <span class="required">*</span></label>
+              ${fieldLabel('height', 'Tinggi badan', true)}
               <input class="form-control" id="height" name="height" type="number" min="1" step="0.1" inputmode="decimal" value="${physical.height || ''}" placeholder="cm" required />
               <div class="invalid-feedback">Tinggi badan wajib diisi.</div>
             </div>
@@ -136,10 +161,7 @@ export function physicalFormView() {
       const weightInput = app.querySelector('#weight');
       const heightInput = app.querySelector('#height');
       const nutritionError = app.querySelector('#nutritionError');
-      const answers = {
-        ...physical,
-        corticosteroid: physical.corticosteroid || physical.medication || '',
-      };
+      const answers = { ...physical };
 
       const renderNutritionStatus = () => {
         const latestNutrition = calculateNutritionStatus({

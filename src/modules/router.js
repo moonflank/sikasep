@@ -28,6 +28,7 @@ import {
   bindNavigation,
   setupBootstrapTooltips,
   setupModalButtons,
+  setupSpeakerButtons,
 } from './screening.js';
 
 const routes = {
@@ -104,6 +105,7 @@ export function createRouter(app, helpers) {
     bindNavigation(app, navigate);
     setupModalButtons(app);
     setupBootstrapTooltips(app);
+    setupSpeakerButtons(app, helpers?.showToast);
     view.mount?.({ app, navigate, ...helpers });
 
     requestAnimationFrame(() => {
